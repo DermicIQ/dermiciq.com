@@ -1,4 +1,5 @@
 import type { AccountDeletionPayload } from "../../../shared/accountDeletion/contract";
+import { postResendEmail } from "./resendHttp";
 
 function escapeHtml(value: string): string {
   return value
@@ -61,51 +62,6 @@ function buildUserConfirmationHtml(email: string): string {
   `.trim();
 }
 
-async function sendResendEmail(options: {
-  apiKey: string;
-  from: string;
-  to: string[];
-  replyTo?: string;
-  subject: string;
-  text: string;
-  html: string;
-}): Promise<{ ok: true } | { ok: false; error: string }> {
-  try {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${options.apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: options.from,
-        to: options.to,
-        ...(options.replyTo ? { reply_to: options.replyTo } : {}),
-        subject: options.subject,
-        text: options.text,
-        html: options.html,
-      }),
-      signal: AbortSignal.timeout(15_000),
-    });
-
-    if (!response.ok) {
-      const detail = await response.text();
-      console.error("resend_deletion_error", {
-        status: response.status,
-        detail: detail.slice(0, 500),
-      });
-      return { ok: false, error: "Failed to send message" };
-    }
-
-    return { ok: true };
-  } catch (error) {
-    console.error("resend_deletion_exception", {
-      message: error instanceof Error ? error.message : "unknown",
-    });
-    return { ok: false, error: "Failed to send message" };
-  }
-}
-
 export async function sendAccountDeletionEmails(options: {
   apiKey: string;
   from: string;
@@ -113,7 +69,7 @@ export async function sendAccountDeletionEmails(options: {
   payload: AccountDeletionPayload;
   remoteIp: string | null;
 }): Promise<{ ok: true } | { ok: false; error: string }> {
-  const internal = await sendResendEmail({
+  const internal = await postResendEmail({
     apiKey: options.apiKey,
     from: options.from,
     to: [options.supportInbox],
@@ -121,18 +77,20 @@ export async function sendAccountDeletionEmails(options: {
     subject: `[DermicIQ Account Deletion] Request from ${options.payload.email}`,
     text: buildInternalTextBody(options.payload, options.remoteIp),
     html: buildInternalHtmlBody(options.payload, options.remoteIp),
+    logTag: "resend_deletion_internal",
   });
   if (!internal.ok) {
     return internal;
   }
 
-  const confirmation = await sendResendEmail({
+  const confirmation = await postResendEmail({
     apiKey: options.apiKey,
     from: options.from,
     to: [options.payload.email],
     subject: "Your DermicIQ account deletion request",
     text: buildUserConfirmationText(options.payload.email),
     html: buildUserConfirmationHtml(options.payload.email),
+    logTag: "resend_deletion_confirmation",
   });
   if (!confirmation.ok) {
     return confirmation;

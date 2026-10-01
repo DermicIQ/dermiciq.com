@@ -30,7 +30,7 @@ function messageForStatus(status: number, bodyMessage?: string): string {
     return "We could not send your message. Check your details and the security check, then try again.";
   }
   if (status === 502 || status === 503) {
-    return "Something went wrong sending your message. Please try again later.";
+    return "We could not deliver your message by email. Please try again shortly or email support@dermiciq.com directly.";
   }
   return "Something went wrong sending your message. Please try again later.";
 }

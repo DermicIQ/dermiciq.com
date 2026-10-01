@@ -371,8 +371,11 @@ export const siteContent = {
         "Questions about DermicIQ, feedback, or press? Send a short note and a human on our small team will read it.",
       submitLabel: "Send message",
       submittingLabel: "Sending…",
-      successTitle: "Message sent",
-      successBody: "Thanks for writing. We’ll get back to you as soon as we can.",
+      successTitle: "Message received",
+      successLead:
+        "Your message was submitted successfully. We sent a confirmation email to",
+      successBody:
+        "Our team at support@dermiciq.com will review your note and reply as soon as we can.",
       sendAnotherLabel: "Send another message",
       privacyNote:
         "This form is protected by Cloudflare Turnstile. See our Privacy and Cookie policies for how we handle submissions.",

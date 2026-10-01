@@ -1,5 +1,5 @@
 import { sendAccountDeletionEmails } from "./resendDeletion";
-import { sendContactEmail } from "./resend";
+import { sendContactEmails } from "./resend";
 import { verifyTurnstile } from "./turnstile";
 import type { Env } from "./types";
 import { validateAccountDeletionPayload } from "./validateDeletion";
@@ -66,10 +66,10 @@ async function handleContactPost(
     return jsonResponse(400, { error: turnstile.error });
   }
 
-  const email = await sendContactEmail({
+  const email = await sendContactEmails({
     apiKey: env.RESEND_API_KEY,
     from: env.CONTACT_FROM,
-    to: env.CONTACT_TO,
+    supportInbox: env.CONTACT_TO,
     payload: validated.data,
     remoteIp: ip,
   });

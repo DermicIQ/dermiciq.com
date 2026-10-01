@@ -5,6 +5,7 @@ import { SEO } from "@/components/ui/seo";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ContactFormField } from "@/components/contact/ContactFormField";
+import { FormSubmissionSuccess } from "@/components/contact/FormSubmissionSuccess";
 import { siteContent } from "@/config/siteContent";
 import { useTurnstileWidget } from "@/hooks/useTurnstileWidget";
 import { cn } from "@/lib/utils";
@@ -40,6 +41,7 @@ export default function ContactPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [succeeded, setSucceeded] = useState(false);
+  const [submittedEmail, setSubmittedEmail] = useState("");
   const submitAbortRef = useRef<AbortController | null>(null);
 
   const {
@@ -105,6 +107,7 @@ export default function ContactPage() {
       });
       if (abortController.signal.aborted) return;
       if (result.ok) {
+        setSubmittedEmail(fields.email.trim());
         setSucceeded(true);
         setFields(emptyFields);
         resetTurnstile();
@@ -142,19 +145,20 @@ export default function ContactPage() {
       <ContentPageBody as="section" contentClassName="max-w-2xl">
           <Card className="border border-border/80 bg-card/80 p-6 shadow-sm sm:p-8">
             {succeeded ? (
-              <div className="space-y-4 text-center sm:py-6" role="status" aria-live="polite">
-                <h2 className="text-2xl font-semibold text-foreground">{p.successTitle}</h2>
-                <p className="text-muted-foreground leading-relaxed">{p.successBody}</p>
-                <div className="flex flex-col items-center gap-3 pt-2 sm:flex-row sm:justify-center">
-                  <Button
-                    type="button"
-                    size="pill-sm"
-                    onClick={() => setSucceeded(false)}
-                  >
-                    {p.sendAnotherLabel}
-                  </Button>
-                </div>
-              </div>
+              <FormSubmissionSuccess
+                title={p.successTitle}
+                actionLabel={p.sendAnotherLabel}
+                onAction={() => {
+                  setSucceeded(false);
+                  setSubmittedEmail("");
+                }}
+              >
+                <p>
+                  {p.successLead}{" "}
+                  <span className="font-medium text-foreground">{submittedEmail}</span>.
+                </p>
+                <p>{p.successBody}</p>
+              </FormSubmissionSuccess>
             ) : (
               <form
                 id={formId}

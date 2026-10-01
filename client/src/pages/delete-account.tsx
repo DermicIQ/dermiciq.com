@@ -6,6 +6,7 @@ import { SEO } from "@/components/ui/seo";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ContactFormField } from "@/components/contact/ContactFormField";
+import { FormSubmissionSuccess } from "@/components/contact/FormSubmissionSuccess";
 import { useTurnstileWidget } from "@/hooks/useTurnstileWidget";
 import { cn } from "@/lib/utils";
 import {
@@ -178,21 +179,26 @@ export default function DeleteAccountPage() {
       <ContentPageBody as="section" contentClassName="max-w-2xl">
         <Card className="border border-border/80 bg-card/80 p-6 shadow-sm sm:p-8">
           {succeeded ? (
-            <div
-              className="space-y-4 rounded-md border border-primary/30 bg-primary/5 px-4 py-5 sm:px-6"
-              role="status"
-              aria-live="polite"
+            <FormSubmissionSuccess
+              title="Request received"
+              actionLabel="Submit another request"
+              onAction={() => {
+                setSucceeded(false);
+                setSubmittedEmail("");
+              }}
             >
-              <h2 className="text-xl font-semibold text-foreground sm:text-2xl">
-                Request Received
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
+              <p>
                 We have logged your request to delete the account associated with{" "}
-                <span className="font-medium text-foreground">{submittedEmail}</span>. We will
-                process your data deletion within 30 days. Check your inbox for a confirmation
-                email.
+                <span className="font-medium text-foreground">{submittedEmail}</span>.
               </p>
-            </div>
+              <p>
+                We will process your data deletion within 30 days. A confirmation email was sent to
+                the address above — check your inbox (and spam folder).
+              </p>
+              <p>
+                Our team at support@dermiciq.com was also notified of this request.
+              </p>
+            </FormSubmissionSuccess>
           ) : (
             <form
               id={formId}
