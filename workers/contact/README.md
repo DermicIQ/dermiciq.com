@@ -29,7 +29,7 @@ Intended route: same-origin `https://dermiciq.com/api/contact*` (no CORS).
 ## Prerequisites
 
 1. **Turnstile** widget for `dermiciq.com` (+ `localhost` / `127.0.0.1` for local testing). Site key goes in the Vite frontend; secret is a Worker secret.
-2. **Resend** account with domain `dermiciq.com` verified, and an API key. The `CONTACT_FROM` address (default `DermicIQ <noreply@dermiciq.com>`) must be allowed on that verified domain.
+2. **Resend** account with your sending domain verified (this project uses `mail.dermiciq.com`), and an API key. The `CONTACT_FROM` address must use that verified domain (default `DermicIQ <noreply@mail.dermiciq.com>`).
 3. Zone `dermiciq.com` on Cloudflare (already true for DNS/proxy in front of GitHub Pages).
 
 ## Multi-project Cloudflare auth (important)
@@ -65,8 +65,10 @@ npx wrangler secret put RESEND_API_KEY
 
 Optional non-secret vars in `wrangler.jsonc`:
 
-- `CONTACT_FROM` — default `DermicIQ <noreply@dermiciq.com>` (Resend domain must be verified)
-- `CONTACT_TO` — default `support@dermiciq.com`
+- `CONTACT_FROM` — default `DermicIQ <noreply@mail.dermiciq.com>` (must match a **verified** domain in Resend)
+- `CONTACT_TO` — default `support@dermiciq.com` (delivered to that mailbox via your email host; not Resend “Receiving”)
+
+**Resend dashboard:** Contact/deletion forms use the **Emails** (outbound API) product. [Receiving](https://resend.com/emails/receiving) is only for **inbound** mail to Resend-managed addresses—it will stay empty unless you route inbound mail there.
 
 Local runtime secrets for `wrangler dev`: copy `.dev.vars.example` → `.dev.vars`.
 

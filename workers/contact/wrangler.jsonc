@@ -19,7 +19,7 @@
   ],
   "vars": {
     // Must be a sender on a domain verified in Resend (e.g. dermiciq.com).
-    "CONTACT_FROM": "DermicIQ <noreply@dermiciq.com>",
+    "CONTACT_FROM": "DermicIQ <noreply@mail.dermiciq.com>",
     "CONTACT_TO": "support@dermiciq.com"
   },
   // Cloudflare Rate Limiting binding (GA). Period must be 10 or 60 seconds —
