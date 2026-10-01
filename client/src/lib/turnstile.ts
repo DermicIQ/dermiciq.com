@@ -1,16 +1,19 @@
+export type TurnstileRenderOptions = {
+  sitekey: string;
+  callback: (token: string) => void;
+  "expired-callback"?: () => void;
+  "error-callback"?: () => void;
+  theme?: "light" | "dark" | "auto";
+  /** Always show the widget when the site key supports it (helps on utility forms). */
+  appearance?: "always" | "execute" | "interaction-only";
+  execution?: "render" | "execute";
+};
+
 export type TurnstileApi = {
-  render: (
-    container: HTMLElement,
-    options: {
-      sitekey: string;
-      callback: (token: string) => void;
-      "expired-callback"?: () => void;
-      "error-callback"?: () => void;
-      theme?: "light" | "dark" | "auto";
-    },
-  ) => string;
+  render: (container: HTMLElement, options: TurnstileRenderOptions) => string;
   reset: (widgetId: string) => void;
   remove: (widgetId: string) => void;
+  execute: (widgetId: string) => void;
 };
 
 declare global {

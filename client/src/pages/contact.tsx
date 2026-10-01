@@ -45,6 +45,8 @@ export default function ContactPage() {
     error: turnstileError,
     setError: setTurnstileError,
     reset: resetTurnstile,
+    executeChallenge,
+    widgetMounted,
   } = useTurnstileWidget({ siteKey });
 
   useEffect(() => {
@@ -80,7 +82,13 @@ export default function ContactPage() {
       turnstileToken || readTurnstileResponseFromForm(event.currentTarget);
 
     if (!token) {
-      setTurnstileError("Please complete the security check before sending.");
+      executeChallenge();
+      setTurnstileError((prev) =>
+        prev ??
+        (widgetMounted
+          ? "Please complete the security check before sending."
+          : "Security check is still loading. Wait a moment, then try again."),
+      );
       return;
     }
 
@@ -257,7 +265,7 @@ export default function ContactPage() {
                     <span className="sr-only">(required)</span>
                   </p>
                   {siteKey ? (
-                    <div ref={widgetHostRef} className="cf-turnstile" />
+                    <div ref={widgetHostRef} className="cf-turnstile min-h-[65px]" />
                   ) : (
                     <p className="text-sm text-muted-foreground">
                       Security check is unavailable until the site key is configured.

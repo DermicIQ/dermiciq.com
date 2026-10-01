@@ -1,4 +1,12 @@
-import { useEffect, useRef, useState, type RefObject } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type RefCallback,
+  type SetStateAction,
+} from "react";
 import { loadTurnstileScript } from "@/lib/turnstile";
 
 type UseTurnstileWidgetOptions = {
@@ -7,37 +15,49 @@ type UseTurnstileWidgetOptions = {
 };
 
 type UseTurnstileWidgetResult = {
-  widgetHostRef: RefObject<HTMLDivElement>;
+  widgetHostRef: RefCallback<HTMLDivElement>;
   token: string;
   error: string | null;
-  setError: (message: string | null) => void;
+  setError: Dispatch<SetStateAction<string | null>>;
   reset: () => void;
+  /** Run an invisible / execute-mode challenge (no-op if widget is not mounted). */
+  executeChallenge: () => void;
+  widgetMounted: boolean;
 };
 
 export function useTurnstileWidget({
   siteKey,
   theme = "light",
 }: UseTurnstileWidgetOptions): UseTurnstileWidgetResult {
-  const widgetHostRef = useRef<HTMLDivElement>(null);
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
+  const widgetHostRef = useCallback((node: HTMLDivElement | null) => {
+    setContainer(node);
+  }, []);
+
   const widgetIdRef = useRef<string | null>(null);
   const [token, setToken] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [widgetMounted, setWidgetMounted] = useState(false);
 
   useEffect(() => {
-    if (!siteKey || !widgetHostRef.current) return;
+    if (!siteKey || !container) {
+      setWidgetMounted(false);
+      return;
+    }
 
     let cancelled = false;
 
     loadTurnstileScript()
       .then((turnstile) => {
-        if (cancelled || !widgetHostRef.current) return;
+        if (cancelled || !container) return;
         if (widgetIdRef.current) {
           turnstile.remove(widgetIdRef.current);
           widgetIdRef.current = null;
         }
-        widgetIdRef.current = turnstile.render(widgetHostRef.current, {
+        widgetIdRef.current = turnstile.render(container, {
           sitekey: siteKey,
           theme,
+          appearance: "always",
           callback: (nextToken) => {
             setToken(nextToken);
             setError(null);
@@ -51,26 +71,37 @@ export function useTurnstileWidget({
             setError("Security check failed to load. Please refresh and try again.");
           },
         });
+        if (!cancelled) {
+          setWidgetMounted(true);
+        }
       })
       .catch(() => {
         if (!cancelled) {
+          setWidgetMounted(false);
           setError("Security check failed to load. Please refresh and try again.");
         }
       });
 
     return () => {
       cancelled = true;
+      setWidgetMounted(false);
       if (widgetIdRef.current && window.turnstile) {
         window.turnstile.remove(widgetIdRef.current);
         widgetIdRef.current = null;
       }
     };
-  }, [siteKey, theme]);
+  }, [siteKey, theme, container]);
 
   const reset = () => {
     setToken("");
     if (widgetIdRef.current && window.turnstile) {
       window.turnstile.reset(widgetIdRef.current);
+    }
+  };
+
+  const executeChallenge = () => {
+    if (widgetIdRef.current && window.turnstile) {
+      window.turnstile.execute(widgetIdRef.current);
     }
   };
 
@@ -80,5 +111,7 @@ export function useTurnstileWidget({
     error,
     setError,
     reset,
+    executeChallenge,
+    widgetMounted,
   };
 }

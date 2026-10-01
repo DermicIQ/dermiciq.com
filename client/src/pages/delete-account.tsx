@@ -46,6 +46,8 @@ export default function DeleteAccountPage() {
     error: turnstileError,
     setError: setTurnstileError,
     reset: resetTurnstile,
+    executeChallenge,
+    widgetMounted,
   } = useTurnstileWidget({ siteKey });
 
   useEffect(() => {
@@ -84,7 +86,13 @@ export default function DeleteAccountPage() {
       turnstileToken || readTurnstileResponseFromForm(event.currentTarget);
 
     if (!token) {
-      setTurnstileError("Please complete the security check before submitting.");
+      executeChallenge();
+      setTurnstileError((prev) =>
+        prev ??
+        (widgetMounted
+          ? "Please complete the security check before submitting."
+          : "Security check is still loading. Wait a moment, then try again."),
+      );
       return;
     }
 
@@ -281,66 +289,65 @@ export default function DeleteAccountPage() {
                     />
                   )}
                 </ContactFormField>
-
-                <div className="space-y-2">
-                  <div className="flex items-start gap-3">
-                    <input
-                      id={`${formId}-confirmed`}
-                      name="confirmed"
-                      type="checkbox"
-                      checked={fields.confirmed}
-                      onChange={(e) => updateField("confirmed", e.target.checked)}
-                      aria-invalid={Boolean(fieldErrors.confirmed)}
-                      aria-describedby={
-                        fieldErrors.confirmed ? confirmedErrorId : undefined
-                      }
-                      className={cn(
-                        "mt-1 h-4 w-4 shrink-0 rounded border bg-background",
-                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                        fieldErrors.confirmed ? "border-destructive" : "border-input",
-                      )}
-                      required
-                    />
-                    <label
-                      htmlFor={`${formId}-confirmed`}
-                      className="text-sm leading-relaxed text-foreground"
-                    >
-                      I understand that deleting my account will permanently remove all associated
-                      data, including scan history and personal profile details.{" "}
-                      <span aria-hidden>*</span>
-                      <span className="sr-only">(required)</span>
-                    </label>
-                  </div>
-                  {fieldErrors.confirmed ? (
-                    <p
-                      id={confirmedErrorId}
-                      className="text-sm text-destructive-foreground"
-                      role="alert"
-                    >
-                      {fieldErrors.confirmed}
-                    </p>
-                  ) : null}
-                </div>
-
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-foreground">
-                    Security check <span aria-hidden>*</span>
-                    <span className="sr-only">(required)</span>
-                  </p>
-                  {siteKey ? (
-                    <div ref={widgetHostRef} className="cf-turnstile" />
-                  ) : (
-                    <p className="text-sm text-muted-foreground">
-                      Security check is unavailable until the site key is configured.
-                    </p>
-                  )}
-                  {turnstileError ? (
-                    <p className="text-sm text-destructive-foreground" role="alert">
-                      {turnstileError}
-                    </p>
-                  ) : null}
-                </div>
               </fieldset>
+
+              <div className="space-y-2">
+                <div className="flex items-start gap-3">
+                  <input
+                    id={`${formId}-confirmed`}
+                    name="confirmed"
+                    type="checkbox"
+                    checked={fields.confirmed}
+                    disabled={submitting}
+                    onChange={(e) => updateField("confirmed", e.target.checked)}
+                    aria-invalid={Boolean(fieldErrors.confirmed)}
+                    aria-describedby={fieldErrors.confirmed ? confirmedErrorId : undefined}
+                    className={cn(
+                      "mt-1 h-4 w-4 shrink-0 rounded border bg-background",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                      fieldErrors.confirmed ? "border-destructive" : "border-input",
+                    )}
+                    required
+                  />
+                  <label
+                    htmlFor={`${formId}-confirmed`}
+                    className="text-sm leading-relaxed text-foreground"
+                  >
+                    I understand that deleting my account will permanently remove all associated
+                    data, including scan history and personal profile details.{" "}
+                    <span aria-hidden>*</span>
+                    <span className="sr-only">(required)</span>
+                  </label>
+                </div>
+                {fieldErrors.confirmed ? (
+                  <p
+                    id={confirmedErrorId}
+                    className="text-sm text-destructive-foreground"
+                    role="alert"
+                  >
+                    {fieldErrors.confirmed}
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-foreground">
+                  Security check <span aria-hidden>*</span>
+                  <span className="sr-only">(required)</span>
+                </p>
+                {siteKey ? (
+                  <div ref={widgetHostRef} className="cf-turnstile min-h-[65px]" />
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    Security check is unavailable until the site key is configured.
+                  </p>
+                )}
+                {turnstileError ? (
+                  <p className="text-sm text-destructive-foreground" role="alert">
+                    {turnstileError}
+                  </p>
+                ) : null}
+              </div>
 
               {submitError ? (
                 <p
