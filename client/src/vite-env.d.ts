@@ -9,6 +9,8 @@ interface ImportMetaEnv {
   readonly VITE_TURNSTILE_SITE_KEY?: string;
   /** Contact form API endpoint (default `/api/contact`). */
   readonly VITE_CONTACT_API_URL?: string;
+  /** Account deletion request API endpoint (default `/api/account-deletion`). */
+  readonly VITE_ACCOUNT_DELETION_API_URL?: string;
 }
 
 interface ImportMeta {

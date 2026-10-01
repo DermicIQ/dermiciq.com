@@ -11,6 +11,11 @@ interface SEOProps {
   type?: "website" | "article";
   /** Hide from search engines (unlisted / partner-only pages). */
   noIndex?: boolean;
+  /**
+   * When `noIndex` is true, use `noindex, follow` instead of the default `noindex, nofollow`.
+   * Useful for utility pages that should remain linkable but not appear in search results.
+   */
+  noIndexFollow?: boolean;
 }
 
 export function SEO({
@@ -19,6 +24,7 @@ export function SEO({
   path = "/",
   type = "website",
   noIndex = false,
+  noIndexFollow = false,
 }: SEOProps) {
   const { meta, brand } = siteContent;
   const pageTitle = title || meta.defaultTitle;
@@ -67,7 +73,12 @@ export function SEO({
       <meta name="description" content={pageDescription} />
       <meta name="keywords" content={meta.keywords} />
       <meta name="theme-color" content={brandThemeColor} />
-      {noIndex ? <meta name="robots" content="noindex, nofollow" /> : null}
+      {noIndex ? (
+        <meta
+          name="robots"
+          content={noIndexFollow ? "noindex, follow" : "noindex, nofollow"}
+        />
+      ) : null}
       <link rel="canonical" href={url} />
 
       <meta property="og:type" content={type} />

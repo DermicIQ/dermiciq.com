@@ -15,6 +15,7 @@ const Cookies = lazy(() => import("@/pages/cookies"));
 const Contact = lazy(() => import("@/pages/contact"));
 const BecomeAPartner = lazy(() => import("@/pages/become-a-partner"));
 const AffiliatePartnerAgreement = lazy(() => import("@/pages/affiliate-partner-agreement"));
+const DeleteAccount = lazy(() => import("@/pages/delete-account"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 
 const routerBase = import.meta.env.BASE_URL.replace(/\/$/, "") || undefined;
@@ -46,6 +47,8 @@ function Routes() {
       <Route path="/become-a-partner" component={BecomeAPartner} />
       {/* Unlisted — linked from Become a Partner only; not in nav/footer */}
       <Route path="/affiliate-partner-agreement" component={AffiliatePartnerAgreement} />
+      {/* Unlisted — direct link only; not in nav/footer */}
+      <Route path="/delete-account" component={DeleteAccount} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -14,7 +14,8 @@
   },
   // Same-origin route on the dermiciq.com zone (GitHub Pages behind CF proxy).
   "routes": [
-    { "pattern": "dermiciq.com/api/contact*", "zone_name": "dermiciq.com" }
+    { "pattern": "dermiciq.com/api/contact*", "zone_name": "dermiciq.com" },
+    { "pattern": "dermiciq.com/api/account-deletion*", "zone_name": "dermiciq.com" }
   ],
   "vars": {
     // Must be a sender on a domain verified in Resend (e.g. dermiciq.com).

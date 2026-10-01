@@ -6,6 +6,8 @@ type ContactFormFieldProps = {
   label: string;
   required?: boolean;
   optionalHint?: string;
+  /** Helper text below the control (linked via aria-describedby when no error). */
+  description?: string;
   error?: string;
   children: (props: {
     id: string;
@@ -29,11 +31,17 @@ export function ContactFormField({
   label,
   required = false,
   optionalHint,
+  description,
   error,
   children,
 }: ContactFormFieldProps) {
   const errorId = `${id}-error`;
+  const descriptionId = `${id}-description`;
   const hasError = Boolean(error);
+  const describedBy =
+    [hasError ? errorId : null, description ? descriptionId : null]
+      .filter(Boolean)
+      .join(" ") || undefined;
 
   return (
     <div>
@@ -53,8 +61,13 @@ export function ContactFormField({
         id,
         className: contactFieldClassName(hasError),
         "aria-invalid": hasError,
-        "aria-describedby": hasError ? errorId : undefined,
+        "aria-describedby": describedBy,
       })}
+      {description && !error ? (
+        <p id={descriptionId} className="mt-1.5 text-sm text-muted-foreground">
+          {description}
+        </p>
+      ) : null}
       {error ? (
         <p id={errorId} className="mt-1.5 text-sm text-destructive-foreground">
           {error}
