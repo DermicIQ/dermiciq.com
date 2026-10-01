@@ -1,3 +1,4 @@
-# Copy to .dev.vars for local `wrangler dev` (never commit real secrets).
-TURNSTILE_SECRET=replace-with-turnstile-secret
+# Copy to .dev.vars for local `wrangler dev` and `npm run check:secrets` (never commit).
+# Use the Turnstile **Secret Key** (not the Site Key). Same values as `wrangler secret put`.
+TURNSTILE_SECRET=replace-with-turnstile-secret-key
 RESEND_API_KEY=re_replace_with_resend_api_key

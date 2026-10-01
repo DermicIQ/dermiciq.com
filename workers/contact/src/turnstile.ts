@@ -16,6 +16,9 @@ function userFacingTurnstileError(codes: string[]): string {
   if (codes.includes("invalid-input-secret")) {
     return "Security verification is misconfigured. Please email support@dermiciq.com.";
   }
+  if (codes.includes("hostname-mismatch")) {
+    return "Security check hostname mismatch. Add dermiciq.com and www.dermiciq.com to your Turnstile widget hostnames.";
+  }
   return "Turnstile verification failed";
 }
 
@@ -48,8 +51,8 @@ export async function verifyTurnstile(options: {
     }
 
     const body = new URLSearchParams({
-      secret: options.secret,
-      response: options.token,
+      secret: options.secret.trim(),
+      response: options.token.trim(),
     });
 
     const response = await fetch(

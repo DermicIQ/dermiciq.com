@@ -12,7 +12,7 @@ export async function postResendEmail(options: {
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${options.apiKey}`,
+        Authorization: `Bearer ${options.apiKey.trim()}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({

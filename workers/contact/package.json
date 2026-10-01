@@ -9,7 +9,8 @@
     "deploy": "wrangler deploy",
     "whoami": "wrangler whoami",
     "types": "wrangler types",
-    "check": "tsc --noEmit"
+    "check": "tsc --noEmit",
+    "check:secrets": "node ./scripts/check-form-secrets.mjs"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20260722.1",
