@@ -10,6 +10,7 @@
  * Or:
  *   TURNSTILE_SECRET=... RESEND_API_KEY=... npm run check:secrets
  */
+import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -46,17 +47,45 @@ const resendKey = process.env.RESEND_API_KEY?.trim() ?? "";
 const problems = [];
 const hints = [];
 
+function workerBoundSecretNames() {
+  const result = spawnSync("npx", ["wrangler", "secret", "list"], {
+    cwd: root,
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  if (result.status !== 0) return null;
+  try {
+    const parsed = JSON.parse(result.stdout);
+    if (!Array.isArray(parsed)) return null;
+    return parsed
+      .map((entry) => (entry && typeof entry.name === "string" ? entry.name : null))
+      .filter((name) => name !== null);
+  } catch {
+    return null;
+  }
+}
+
+const workerSecrets = workerBoundSecretNames();
+const workerHasTurnstile = workerSecrets?.includes("TURNSTILE_SECRET") ?? false;
+const workerHasResend = workerSecrets?.includes("RESEND_API_KEY") ?? false;
+
 if (!siteKey) {
   problems.push("VITE_TURNSTILE_SITE_KEY missing in repo-root .env (needed for the live site widget).");
 }
-if (!turnstileSecret) {
-  problems.push(
-    "TURNSTILE_SECRET missing. Add it to workers/contact/.dev.vars or pass in the environment for this check.",
-  );
-}
-if (!resendKey) {
-  problems.push(
-    "RESEND_API_KEY missing. Add it to workers/contact/.dev.vars or pass in the environment for this check.",
+
+const localSecretsMissing = !turnstileSecret || !resendKey;
+if (localSecretsMissing) {
+  if (workerHasTurnstile && workerHasResend) {
+    hints.push(
+      "Cloudflare Worker already has TURNSTILE_SECRET and RESEND_API_KEY (wrangler cannot show values). This script only tests secrets you copy into workers/contact/.dev.vars locally.",
+    );
+  } else if (workerSecrets !== null) {
+    problems.push(
+      "Worker is missing one or more secrets. Run: npx wrangler secret put TURNSTILE_SECRET && npx wrangler secret put RESEND_API_KEY",
+    );
+  }
+  hints.push(
+    "To run full pairing tests: cp .dev.vars.example .dev.vars, paste the same Secret Key + Resend API key, then npm run check:secrets again.",
   );
 }
 
@@ -129,7 +158,7 @@ async function checkResend() {
   }
 }
 
-if (problems.length === 0) {
+if (!localSecretsMissing && problems.length === 0) {
   await checkTurnstile();
   await checkResend();
 }
@@ -150,22 +179,29 @@ if (hints.length) {
   for (const hint of hints) console.log(`  • ${hint}`);
 }
 
+if (workerSecrets !== null) {
+  console.log(
+    `\nWorker secrets bound: ${workerSecrets.length ? workerSecrets.join(", ") : "(none)"}`,
+  );
+}
+
 if (problems.length) {
   console.error("\nProblems:");
   for (const problem of problems) console.error(`  ✗ ${problem}`);
   console.error(`
-Fix, then re-upload Worker secrets (paste carefully — no trailing newline):
-  cd workers/contact
-  npx wrangler secret put TURNSTILE_SECRET
-  npx wrangler secret put RESEND_API_KEY
-  npm run deploy
-
 Turnstile widget (Cloudflare dashboard):
   • Hostnames: dermiciq.com, www.dermiciq.com, localhost
   • Site Key  → repo-root .env VITE_TURNSTILE_SITE_KEY + npm run deploy:apex
-  • Secret Key → wrangler secret TURNSTILE_SECRET only
+  • Secret Key → wrangler secret TURNSTILE_SECRET (must match THIS widget, not the Site Key)
 `);
   process.exit(1);
+}
+
+if (localSecretsMissing) {
+  console.log(
+    "\n○ Local secret values not provided — skipped Turnstile/Resend API tests. Worker may still be configured via wrangler secret put.\n",
+  );
+  process.exit(0);
 }
 
 console.log("\n✓ No blocking issues detected. If forms still fail, complete Turnstile on the page and check Resend → Emails (not Receiving).\n");
