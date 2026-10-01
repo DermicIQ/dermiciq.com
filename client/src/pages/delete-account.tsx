@@ -147,9 +147,8 @@ export default function DeleteAccountPage() {
           </p>
           <ul className="list-none space-y-3 pl-0 text-base sm:text-lg">
             <li>
-              <span className="font-semibold text-foreground">In-App (Instant):</span>{" "}
-              Go to <span className="font-medium text-foreground">Profile</span> →{" "}
-              <span className="font-medium text-foreground">Account</span> →{" "}
+              <span className="font-semibold text-foreground">In-App (Instant):</span> Go to{" "}
+              <span className="font-medium text-foreground">Profile</span> →{" "}
               <span className="font-medium text-foreground">Delete Account</span> inside the app
               to immediately purge your data.
             </li>
