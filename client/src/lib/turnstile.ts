@@ -84,7 +84,37 @@ export function loadTurnstileScript(): Promise<TurnstileApi> {
 export function readTurnstileResponseFromForm(
   form: HTMLFormElement,
 ): string {
-  const input = form.querySelector('input[name="cf-turnstile-response"]');
-  if (!(input instanceof HTMLInputElement)) return "";
-  return input.value.trim();
+  const inputs = form.querySelectorAll('input[name="cf-turnstile-response"]');
+  let token = "";
+  for (let i = 0; i < inputs.length; i += 1) {
+    const input = inputs.item(i);
+    if (!input) continue;
+    if (!(input instanceof HTMLInputElement)) continue;
+    const value = input.value.trim();
+    if (value.length > token.length) {
+      token = value;
+    }
+  }
+  return token;
+}
+
+export function resolveTurnstileToken(
+  form: HTMLFormElement,
+  stateToken: string,
+): string {
+  const fromForm = readTurnstileResponseFromForm(form);
+  const fromState = stateToken.trim();
+  if (fromForm && fromState) {
+    return fromForm.length >= fromState.length ? fromForm : fromState;
+  }
+  return fromForm || fromState;
+}
+
+export function isTurnstileVerificationError(message: string): boolean {
+  const normalized = message.toLowerCase();
+  return (
+    normalized.includes("turnstile") ||
+    normalized.includes("security check expired") ||
+    normalized.includes("security check invalid")
+  );
 }

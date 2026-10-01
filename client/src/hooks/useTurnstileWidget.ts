@@ -94,6 +94,7 @@ export function useTurnstileWidget({
 
   const reset = () => {
     setToken("");
+    setError(null);
     if (widgetIdRef.current && window.turnstile) {
       window.turnstile.reset(widgetIdRef.current);
     }

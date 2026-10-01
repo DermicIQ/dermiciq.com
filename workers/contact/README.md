@@ -61,6 +61,8 @@ npx wrangler secret put TURNSTILE_SECRET
 npx wrangler secret put RESEND_API_KEY
 ```
 
+**Turnstile pairing (required):** `TURNSTILE_SECRET` must be the **secret key** from the **same** Turnstile widget as `VITE_TURNSTILE_SITE_KEY` in the repo-root `.env` (site key = public, secret = Worker only). In the Turnstile widget settings, allow hostnames `dermiciq.com`, `www.dermiciq.com`, and `localhost` for local dev. If the widget shows “Success” but the API returns verification errors, re-copy both keys from that widget and redeploy the Worker secret plus rebuild the SPA.
+
 Optional non-secret vars in `wrangler.jsonc`:
 
 - `CONTACT_FROM` — default `DermicIQ <noreply@dermiciq.com>` (Resend domain must be verified)

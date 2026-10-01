@@ -8,7 +8,10 @@ import { Card } from "@/components/ui/card";
 import { ContactFormField } from "@/components/contact/ContactFormField";
 import { useTurnstileWidget } from "@/hooks/useTurnstileWidget";
 import { cn } from "@/lib/utils";
-import { readTurnstileResponseFromForm } from "@/lib/turnstile";
+import {
+  isTurnstileVerificationError,
+  resolveTurnstileToken,
+} from "@/lib/turnstile";
 import {
   ACCOUNT_DELETION_LIMITS,
   DELETION_REASONS,
@@ -82,8 +85,7 @@ export default function DeleteAccountPage() {
       return;
     }
 
-    const token =
-      turnstileToken || readTurnstileResponseFromForm(event.currentTarget);
+    const token = resolveTurnstileToken(event.currentTarget, turnstileToken);
 
     if (!token) {
       executeChallenge();
@@ -114,7 +116,12 @@ export default function DeleteAccountPage() {
         resetTurnstile();
         return;
       }
-      setSubmitError(result.message);
+      if (isTurnstileVerificationError(result.message)) {
+        setSubmitError(null);
+        setTurnstileError(result.message);
+      } else {
+        setSubmitError(result.message);
+      }
       resetTurnstile();
     } catch (error) {
       if (abortController.signal.aborted) return;

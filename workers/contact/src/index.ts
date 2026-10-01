@@ -61,7 +61,6 @@ async function handleContactPost(
   const turnstile = await verifyTurnstile({
     secret: env.TURNSTILE_SECRET,
     token: validated.data.turnstileToken,
-    remoteIp: ip,
   });
   if (!turnstile.ok) {
     return jsonResponse(400, { error: turnstile.error });
@@ -111,7 +110,6 @@ async function handleAccountDeletionPost(
   const turnstile = await verifyTurnstile({
     secret: env.TURNSTILE_SECRET,
     token: validated.data.turnstileToken,
-    remoteIp: ip,
   });
   if (!turnstile.ok) {
     return jsonResponse(400, { error: turnstile.error });
