@@ -325,8 +325,9 @@ export default function DeleteAccountPage() {
                     htmlFor={`${formId}-confirmed`}
                     className="text-sm leading-relaxed text-foreground"
                   >
-                    I understand that deleting my account will permanently remove all associated
-                    data, including scan history and personal profile details.{" "}
+                    I understand that deleting my account permanently removes my personal profile,
+                    scan history, and user data. Pseudonymized security and consent logs are
+                    retained as required for regulatory compliance.{" "}
                     <span aria-hidden>*</span>
                     <span className="sr-only">(required)</span>
                   </label>
