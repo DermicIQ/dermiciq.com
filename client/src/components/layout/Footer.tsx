@@ -28,7 +28,7 @@ export function Footer() {
                   {brand.shortName}
                 </span>
                 <span className="text-nav-caption uppercase" style={{ color: "#e2f7f4" }}>
-                  Technologies Inc.
+                  {brand.wordmarkSubline}
                 </span>
               </span>
             </Link>

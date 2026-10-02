@@ -16,7 +16,7 @@ Not purple/indigo gradients. Not cream + serif + terracotta. Not dark-mode-first
 |------|------|-----|-----|
 | Recognition | Light Cyan Aqua | `#76EEC6` | Logo highlight, accent chips |
 | Header / Border | Bright Aqua Teal | `#40C0BA` | Top header bar (all breakpoints), hero CTA fill |
-| Nav caption accent | Soft Aqua Mist | `#e2f7f4` | “Technologies Inc.” under wordmark (nav + footer) |
+| Nav caption accent | Soft Aqua Mist | `#e2f7f4` | “Technologies” under wordmark (nav + footer) |
 | Background | Minty Off-White | `#F8FFFE` | Page canvas, DermicIQ wordmark on aqua header |
 | Primary | Deep Sea Teal | `#005F5B` | Primary CTAs, headings, links, theme-color, mobile menu text |
 | Secondary | Soft Mint | `#C8F2EB` | Soft fills, section washes, mobile menu panel, hero headline |
@@ -29,14 +29,14 @@ Not purple/indigo gradients. Not cream + serif + terracotta. Not dark-mode-first
 - **Header background (all sizes):** `#40C0BA`
 - **Mobile hamburger menu panel only:** `#C8F2EB` (header stays `#40C0BA`)
 - **Footer background:** deeper teal `hsl(177 100% 16%)`
-- **Footer foreground / wordmark:** DermicIQ `#F8FFFE`, Technologies Inc. `#e2f7f4`
+- **Footer foreground / wordmark:** DermicIQ `#F8FFFE`, Technologies `#e2f7f4`
 
 ## Marketing surface rules (site-specific, mirror where useful)
 
 ### Nav / footer wordmark
 
 - Line 1 **DermicIQ** — Montserrat 700, `text-sm`, color `#F8FFFE`
-- Line 2 **Technologies Inc.** — Montserrat 600, `0.625rem`, uppercase, tracking `0.14em`, color `#e2f7f4`
+- Line 2 **Technologies** — Montserrat 600, `0.625rem`, uppercase, tracking `0.14em`, color `#e2f7f4`
 - Logo mark sits left of the wordmark (`logo-96`, rounded-2xl)
 
 ### Mobile nav (`< lg`)

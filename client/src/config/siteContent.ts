@@ -1,5 +1,5 @@
 /**
- * Single source of truth: DermicIQ TECHNOLOGIES INC. (business plan PDF).
+ * Single source of truth: DermicIQ Technologies (public brand; legal entity in policy documents).
  * Same facts and key messages as the PDF, with wording that reads like a real conversation.
  */
 
@@ -7,8 +7,9 @@ import { siteOrigin } from "@/lib/site";
 
 export const siteContent = {
   brand: {
-    name: "DermicIQ Technologies Inc.",
+    name: "DermicIQ Technologies",
     shortName: "DermicIQ",
+    wordmarkSubline: "Technologies",
     productName: "DermicIQ",
     tagline: "Cosmetic ingredients explained for your skin, not for a scoreboard.",
     description:
@@ -44,7 +45,7 @@ export const siteContent = {
       headline: "Skincare ingredients that match how your skin really behaves",
       subhead:
         "We look at INCI lists the way a thoughtful consultant would: against your history, your intolerances, and what you already know works.",
-      eyebrow: "DermicIQ Technologies Inc.",
+      eyebrow: "DermicIQ Technologies",
       /** Prefer responsive WebP/JPEG in HomeHero; kept for reference / fallbacks. */
       imageSrc: "images/hero-1200.jpg",
       imageAlt: "",
@@ -291,7 +292,7 @@ export const siteContent = {
         "A small team building calmer, personal ingredient help for people who are tired of one-size-fits-all scores. Our mission, what we do differently, and a note from us.",
       headline: "About DermicIQ",
       intro:
-        "We are DermicIQ Technologies Inc., a company focused on one thing: making cosmetic ingredients easier to read in a way that respects you, your history, and your real skin, not a generic “safe for everyone” stamp.",
+        "We are DermicIQ Technologies, a company focused on one thing: making cosmetic ingredients easier to read in a way that respects you, your history, and your real skin, not a generic “safe for everyone” stamp.",
       missionTitle: "Our mission, and why we exist",
       missionParagraphs: [
         "DermicIQ exists because you shouldn’t have to guess whether a long, chemical-sounding ingredient name matters for you based on a color code or crowd score. Our mission is to show how ingredients line up with your preferences, intolerances, and lived experience.",
@@ -365,7 +366,7 @@ export const siteContent = {
     contact: {
       metaTitle: "Contact | DermicIQ",
       metaDescription:
-        "Get in touch with DermicIQ Technologies Inc. Send a message about the product, partnerships, or sensitive-skin questions.",
+        "Get in touch with DermicIQ Technologies. Send a message about the product, partnerships, or sensitive-skin questions.",
       headline: "Contact us",
       intro:
         "Questions about DermicIQ, feedback, or press? Send a short note and a human on our small team will read it.",
@@ -501,7 +502,7 @@ export const siteContent = {
   },
 
   footer: {
-    copyright: "© 2026 DermicIQ Technologies Inc. | All rights reserved.",
+    copyright: "© 2026 DermicIQ Technologies | All rights reserved.",
     columns: [
       {
         title: "Product",

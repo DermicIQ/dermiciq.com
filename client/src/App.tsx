@@ -10,11 +10,15 @@ const HowItWorks = lazy(() => import("@/pages/how-it-works"));
 const About = lazy(() => import("@/pages/about"));
 const ForSensitiveSkin = lazy(() => import("@/pages/for-sensitive-skin"));
 const Privacy = lazy(() => import("@/pages/privacy"));
+const PrivacyFr = lazy(() => import("@/pages/privacy-fr"));
 const Terms = lazy(() => import("@/pages/terms"));
+const TermsFr = lazy(() => import("@/pages/terms-fr"));
 const Cookies = lazy(() => import("@/pages/cookies"));
+const CookiesFr = lazy(() => import("@/pages/cookies-fr"));
 const Contact = lazy(() => import("@/pages/contact"));
 const BecomeAPartner = lazy(() => import("@/pages/become-a-partner"));
 const AffiliatePartnerAgreement = lazy(() => import("@/pages/affiliate-partner-agreement"));
+const AffiliatePartnerAgreementFr = lazy(() => import("@/pages/affiliate-partner-agreement-fr"));
 const DeleteAccount = lazy(() => import("@/pages/delete-account"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 
@@ -40,13 +44,17 @@ function Routes() {
       <Route path="/about" component={About} />
       <Route path="/for-sensitive-skin" component={ForSensitiveSkin} />
       <Route path="/privacy" component={Privacy} />
+      <Route path="/privacy/fr" component={PrivacyFr} />
       <Route path="/terms" component={Terms} />
+      <Route path="/terms/fr" component={TermsFr} />
       <Route path="/cookies" component={Cookies} />
+      <Route path="/cookies/fr" component={CookiesFr} />
 
       <Route path="/contact" component={Contact} />
       <Route path="/become-a-partner" component={BecomeAPartner} />
       {/* Unlisted — linked from Become a Partner only; not in nav/footer */}
       <Route path="/affiliate-partner-agreement" component={AffiliatePartnerAgreement} />
+      <Route path="/affiliate-partner-agreement/fr" component={AffiliatePartnerAgreementFr} />
       {/* Unlisted — direct link only; not in nav/footer */}
       <Route path="/delete-account" component={DeleteAccount} />
       <Route component={NotFound} />
